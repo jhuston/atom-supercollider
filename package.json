@@ -11,6 +11,7 @@
   "dependencies": {
     "atom-space-pen-views": "^2.2.0",
     "baconjs": "^0.7.84",
+    "balanced-match": "^0.4.1",
     "escape-html": "~1.0.3",
     "growl": "^1.9.2",
     "jquery": "^2",
@@ -24,6 +25,7 @@
   "activationCommands": {
     "atom-workspace": [
       "supercollider:eval",
+      "supercollider:eval-range",
       "supercollider:open-post-window",
       "supercollider:clear-post-window",
       "supercollider:open-help-file",

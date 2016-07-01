@@ -4,6 +4,7 @@ Repl = require('./repl')
 $ = require 'jquery'
 Q = require('q')
 _ = require 'underscore'
+balanced = require 'balanced-match'
 
 
 module.exports =
@@ -29,6 +30,8 @@ class Controller
       'supercollider:cmd-period', => @cmdPeriod()
     atom.commands.add 'atom-workspace',
       'supercollider:eval', => @eval()
+    atom.commands.add 'atom-workspace',
+      'supercollider:eval-region', => @evalRegion()
     atom.commands.add 'atom-workspace',
       'supercollider:open-help-file', => @openHelpFile()
     atom.commands.add 'atom-workspace',
@@ -176,6 +179,30 @@ class Controller
         expression = null
     [expression, range]
 
+  currentExpressionRegion: ->
+    editor = atom.workspace.getActiveTextEditor()
+    return unless editor?
+      # look for the upper and lower row boundaries
+      pos = editor.getCursorBufferPosition()
+      row = editor.getCursorScreenPosition().row
+      # check if there are characters on the line at pos
+      # and if the characters match a "(" on a line by itself
+      # yes? upper bounds of range is line below "("
+      # no ? go up a line and checka again
+      # repeat for the lower bounds!
+      # range = new Range([upperBounds,0], [lowerBounds, 0])
+      if row?
+        text = editor.lineTextForBufferRow(row)
+        console.log text
+        if text is "("
+          console.log "text is open paren"
+        range = null
+        expression = null
+      else
+        range = null
+        expression = null
+    [expression, range]
+
   currentPath: ->
     editor = atom.workspace.getActiveTextEditor()
     return unless editor?
@@ -184,6 +211,12 @@ class Controller
   eval: ->
     return unless @editorIsSC()
     [expression, range] = @currentExpression()
+    @evalWithRepl(expression, @currentPath(), range)
+
+  evalRegion: ->
+    console.log "eval region called"
+    return unless @editorIsSC()
+    [expression, range] = @currentExpressionRegion()
     @evalWithRepl(expression, @currentPath(), range)
 
   evalWithRepl: (expression, path, range) ->

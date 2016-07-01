@@ -12,6 +12,7 @@
 "atom-workspace atom-text-editor[data-grammar~='supercollider']":
   'cmd-\\': 'supercollider:open-post-window'
   'shift-enter': 'supercollider:eval'
+  'cmd-enter': 'supercollider:eval-region'
   'shift-cmd-k': 'supercollider:recompile'
   'cmd-.': 'supercollider:cmd-period'
   'shift-cmd-C': 'supercollider:clear-post-window'
